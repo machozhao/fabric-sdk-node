@@ -127,12 +127,12 @@ function installChaincode(org, chaincode_path, version, t) {
 		var errors = [];
 		for(var i in proposalResponses) {
 			let one_good = false;
-			if (proposalResponses && proposalResponses[0].response && proposalResponses[0].response.status === 200) {
+			if (proposalResponses && proposalResponses[i].response && proposalResponses[i].response.status === 200) {
 				one_good = true;
 				logger.info('install proposal was good');
 			} else {
 				logger.error('install proposal was bad');
-				errors.push(proposalResponses[0]);
+				errors.push(proposalResponses[i]);
 			}
 			all_good = all_good & one_good;
 		}
@@ -408,7 +408,7 @@ function instantiateChaincode(userOrg, chaincode_path, version, upgrade, t){
 };
 
 function buildChaincodeProposal(client, the_user, chaincode_path, version, upgrade, transientMap) {
-	var tx_id = client.newTransactionID(the_user);
+	var tx_id = client.newTransactionID();
 
 	// send proposal to endorser
 	var request = {
@@ -554,7 +554,7 @@ function invokeChaincode(userOrg, version, t, useStore){
 		return channel.initialize();
 
 	}).then((nothing) => {
-		tx_id = client.newTransactionID(the_user);
+		tx_id = client.newTransactionID();
 		utils.setConfigSetting('E2E_TX_ID', tx_id.getTransactionID());
 		logger.debug('setConfigSetting("E2E_TX_ID") = %s', tx_id.getTransactionID());
 
